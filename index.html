@@ -87,10 +87,13 @@
         .video-wrapper.active {
             display: block;
         }
+        .video-wrapper video,
         .video-wrapper iframe {
             width: 100%;
             height: 100%;
             border: none;
+            object-fit: contain;
+            background: #000;
         }
         footer {
             margin-top: 30px;
@@ -111,18 +114,21 @@
 
         <!-- Platform Seçim Butonları -->
         <div class="player-selectors">
-            <button class="player-btn active" onclick="switchPlayer('archive', this)">▶ Ana Oynatıcı (Archive.org)</button>
+            <button class="player-btn active" onclick="switchPlayer('archive', this)">▶ Ana Oynatıcı (Hızlı & Sade)</button>
             <button class="player-btn" onclick="switchPlayer('okru', this)">▶ Alternatif (OK.ru)</button>
         </div>
 
         <!-- Video Çerçevesi -->
         <div class="video-container">
-            <!-- Archive.org Oynatıcısı (Varsayılan olarak açık) -->
+            <!-- Özel HTML5 Video Oynatıcısı (Varsayılan olarak açık) -->
             <div id="archive-player" class="video-wrapper active">
-                <iframe src="https://archive.org/embed/wholetrain-turkce-altyazi" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"></iframe>
+                <video controls controlsList="nodownload" preload="metadata">
+                    <source src="https://archive.org/download/wholetrain-turkce-altyazi/Wholetrain%20T%C3%BCrk%C3%A7e%20Altyaz%C4%B1%201080P%20Hd%20%281080P%2030Fps%20H264-128Kbit%20Aac%29.mp4" type="video/mp4">
+                    Tarayıcınız video etiketini desteklemiyor.
+                </video>
             </div>
 
-            <!-- OK.ru Oynatıcısı (Gizli başlar, butona basınca açılır) -->
+            <!-- OK.ru Oynatıcısı (Alternatif) -->
             <div id="okru-player" class="video-wrapper">
                 <iframe src="https://ok.ru/videoembed/17366610152093?nochat=1" allow="autoplay; fullscreen" allowfullscreen="true"></iframe>
             </div>
@@ -135,6 +141,12 @@
 
     <script>
         function switchPlayer(playerType, btnElement) {
+            // Arşiv oynatıcısındaki videoyu durdur (arka planda ses çalmaya devam etmesin)
+            const videoEl = document.querySelector('#archive-player video');
+            if (videoEl) {
+                videoEl.pause();
+            }
+
             // Tüm oynatıcıları gizle
             document.querySelectorAll('.video-wrapper').forEach(el => el.classList.remove('active'));
             // Tüm butonların aktifliğini kaldır
