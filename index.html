@@ -34,9 +34,38 @@
         }
         p {
             color: #777;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-size: 14px;
         }
+        /* Oynatıcı Değiştirme Butonları */
+        .player-selectors {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .player-btn {
+            background-color: #1a1a1a;
+            color: #aaa;
+            border: 1px solid #333;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .player-btn:hover {
+            background-color: #262626;
+            color: #fff;
+        }
+        .player-btn.active {
+            background-color: #ff4500;
+            color: #fff;
+            border-color: #ff4500;
+            box-shadow: 0 0 10px rgba(255, 69, 0, 0.4);
+        }
+        /* Video Alanı */
         .video-container {
             position: relative;
             width: 100%;
@@ -47,10 +76,18 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.8);
             border: 1px solid #222;
         }
-        .video-container iframe {
+        .video-wrapper {
             position: absolute;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        .video-wrapper.active {
+            display: block;
+        }
+        .video-wrapper iframe {
             width: 100%;
             height: 100%;
             border: none;
@@ -72,14 +109,46 @@
         <h1>Wholetrain</h1>
         <p>Türkçe Altyazılı Kült Film</p>
 
+        <!-- Platform Seçim Butonları -->
+        <div class="player-selectors">
+            <button class="player-btn active" onclick="switchPlayer('archive', this)">▶ Ana Oynatıcı (Archive.org)</button>
+            <button class="player-btn" onclick="switchPlayer('okru', this)">▶ Alternatif (OK.ru)</button>
+        </div>
+
+        <!-- Video Çerçevesi -->
         <div class="video-container">
-            <iframe src="https://archive.org/embed/wholetrain-turkce-altyazi" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+            <!-- Archive.org Oynatıcısı (Varsayılan olarak açık) -->
+            <div id="archive-player" class="video-wrapper active">
+                <iframe src="https://archive.org/embed/wholetrain-turkce-altyazi" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"></iframe>
+            </div>
+
+            <!-- OK.ru Oynatıcısı (Gizli başlar, butona basınca açılır) -->
+            <div id="okru-player" class="video-wrapper">
+                <iframe src="https://ok.ru/videoembed/17366610152093?nochat=1" allow="autoplay; fullscreen" allowfullscreen="true"></iframe>
+            </div>
         </div>
     </div>
 
     <footer>
         Çeviri & Düzenleme: <span>HASK</span>
     </footer>
+
+    <script>
+        function switchPlayer(playerType, btnElement) {
+            // Tüm oynatıcıları gizle
+            document.querySelectorAll('.video-wrapper').forEach(el => el.classList.remove('active'));
+            // Tüm butonların aktifliğini kaldır
+            document.querySelectorAll('.player-btn').forEach(el => el.classList.remove('active'));
+
+            // Seçilen oynatıcıyı aç ve butonu turuncu yap
+            if (playerType === 'archive') {
+                document.getElementById('archive-player').classList.add('active');
+            } else if (playerType === 'okru') {
+                document.getElementById('okru-player').classList.add('active');
+            }
+            btnElement.classList.add('active');
+        }
+    </script>
 
 </body>
 </html>
